@@ -1,5 +1,4 @@
 //Main Class of Mario Game
-
 function MarioGame() {
   var gameUI = GameUI.getInstance();
 
@@ -36,8 +35,10 @@ function MarioGame() {
   var instructionTick = 0; //showing instructions counter
   var that = this;
 
-  // TAMBAHKAN PROPERTI PAUSE DI SINI
+  // PROPERTI PAUSE DAN STATUS
   this.isPaused = false;
+  this.isDead = false;
+  this.isGameOver = false;
 
   this.init = function(levelMaps, level) {
     height = 480;
@@ -48,6 +49,11 @@ function MarioGame() {
     goombas = [];
     powerUps = [];
     bullets = [];
+
+    // Reset status game
+    this.isPaused = false;
+    this.isDead = false;
+    this.isGameOver = false;
 
     gameUI.setWidth(viewPort);
     gameUI.setHeight(height);
@@ -72,6 +78,8 @@ function MarioGame() {
     } else {
       mario.x = 10;
       mario.frame = 0;
+      mario.type = 'small'; // Reset ke small mario
+      mario.invulnerable = false;
     }
     element = new Element();
     gameSound = new GameSound();
@@ -82,32 +90,51 @@ function MarioGame() {
     that.startGame();
   };
 
-  // TAMBAHKAN METODE PAUSE DAN RESUME DI SINI
+  // METODE PAUSE DAN RESUME
   this.pauseGame = function() {
-    if (!this.isPaused) {
+    if (!this.isPaused && !this.isDead && !this.isGameOver) {
       window.cancelAnimationFrame(animationID);
       this.isPaused = true;
       
+      // Update tombol pause
+      if (typeof updatePauseButton === 'function') {
+        updatePauseButton(true);
+      }
+      
       // Tampilkan overlay pause
-      gameUI.makeBox(0, 0, maxWidth, height);
-      gameUI.writeText('Permainan Dijeda', centerPos - 100, height / 2 - 20);
-      gameUI.writeText('Tekan tombol Jeda untuk melanjutkan', centerPos - 180, height / 2 + 20);
+      gameUI.makeBox(0, 0, viewPort, height, 'rgba(0, 0, 0, 0.7)');
+      gameUI.writeText('GAME PAUSED', viewPort/2 - 100, height/2 - 20, 'white', 32);
+      gameUI.writeText('Press P or PAUSE button to continue', viewPort/2 - 180, height/2 + 20, 'white', 20);
     }
   };
 
   this.resumeGame = function() {
     if (this.isPaused) {
       this.isPaused = false;
+      
+      // Update tombol pause
+      if (typeof updatePauseButton === 'function') {
+        updatePauseButton(false);
+      }
+      
+      // Lanjutkan game loop
       animationID = window.requestAnimationFrame(that.startGame);
     }
   };
 
-  // TAMBAHKAN METODE RESTART LEVEL DI SINI
+  this.togglePause = function() {
+    if (this.isPaused) {
+      this.resumeGame();
+    } else {
+      this.pauseGame();
+    }
+  };
+
+  // METODE RESTART LEVEL
   this.restartLevel = function() {
-    that.clearTimeOut();
+    that.clearAllTimeouts();
     that.clearInstances();
     that.init(originalMaps, currentLevel);
-    this.isPaused = false;
   };
 
   that.calculateMaxWidth = function() {
@@ -126,9 +153,15 @@ function MarioGame() {
 
     //key binding
     document.body.addEventListener('keydown', function(e) {
-      // TAMBAHKAN HANDLER UNTUK TOMBOL P (PAUSE)
+      // Tombol P untuk pause
       if (e.keyCode === 80) { // 'P' key for pause
         that.togglePause();
+        e.preventDefault();
+      }
+      
+      // Jangan proses input lainnya jika game sedang pause atau mati
+      if (that.isPaused || that.isDead || that.isGameOver) {
+        return;
       }
       
       keys[e.keyCode] = true;
@@ -140,6 +173,11 @@ function MarioGame() {
 
     //key binding for touch events
     canvas.addEventListener('touchstart', function(e) {
+      // Jangan proses touch jika game sedang pause atau mati
+      if (that.isPaused || that.isDead || that.isGameOver) {
+        return;
+      }
+      
       var touches = e.changedTouches;
       e.preventDefault();
 
@@ -208,20 +246,22 @@ function MarioGame() {
     });
   };
 
-  // TAMBAHKAN METHOD TOGGLE PAUSE
-  this.togglePause = function() {
-    if (this.isPaused) {
-      this.resumeGame();
-    } else {
-      this.pauseGame();
-    }
-  };
-
   //Main Game Loop
   this.startGame = function() {
-    // JIKA GAME SEDANG DI PAUSE, JANGAN JALANKAN GAME LOOP
+    // JIKA GAME SEDANG DI PAUSE, JANGAN JALANKAN GAME LOGIC
     if (that.isPaused) {
       animationID = window.requestAnimationFrame(that.startGame);
+      return;
+    }
+    
+    // JIKA MARIO MATI, JANGAN UPDATE GAME
+    if (that.isDead) {
+      animationID = window.requestAnimationFrame(that.startGame);
+      return;
+    }
+    
+    // JIKA GAME OVER, JANGAN UPDATE GAME
+    if (that.isGameOver) {
       return;
     }
     
@@ -262,10 +302,9 @@ function MarioGame() {
   };
 
   this.showInstructions = function() {
-    gameUI.writeText('Controls: Arrow keys for direction, shift to run, ctrl for bullets', 30, 30);
-    gameUI.writeText('Tip: Jumping while running makes you jump higher', 30, 60);
-    // TAMBAHKAN INSTRUKSI PAUSE
-    gameUI.writeText('Press P to pause the game', 30, 90);
+    gameUI.writeText('Controls: Arrow keys for direction, shift to run, ctrl for bullets', 30, 30, 'white', 16);
+    gameUI.writeText('Tip: Jumping while running makes you jump higher', 30, 60, 'white', 16);
+    gameUI.writeText('Press P to pause the game', 30, 90, 'white', 16);
   };
 
   this.renderMap = function() {
@@ -626,6 +665,7 @@ function MarioGame() {
             }, 1000);
           } else if (mario.type == 'small') {
             //kill mario if collision occurs when he is small
+            that.isDead = true;
             that.pauseGame();
 
             mario.frame = 13;
@@ -685,6 +725,7 @@ function MarioGame() {
 
     //for ground (viewport ground)
     if (mario.y >= height) {
+      that.isDead = true;
       that.pauseGame();
 
       //sound when mario dies
@@ -706,7 +747,7 @@ function MarioGame() {
   //controlling mario with key events
   this.updateMario = function() {
     // JIKA GAME SEDANG DI PAUSE, JANGAN PERBARUI POSISI MARIO
-    if (that.isPaused) {
+    if (that.isPaused || that.isDead || that.isGameOver) {
       return;
     }
     
@@ -884,24 +925,17 @@ function MarioGame() {
     }
   };
 
-  this.pauseGame = function() {
-    window.cancelAnimationFrame(animationID);
-    this.isPaused = true;
-    
-    // Tampilkan overlay pause
-    gameUI.makeBox(0, 0, maxWidth, height);
-    gameUI.writeText('Permainan Dijeda', centerPos - 100, height / 2 - 20);
-    gameUI.writeText('Tekan tombol Jeda untuk melanjutkan', centerPos - 180, height / 2 + 20);
-  };
-
   this.gameOver = function() {
+    that.isGameOver = true;
     score.gameOverView();
-    gameUI.makeBox(0, 0, maxWidth, height);
-    gameUI.writeText('Game Over', centerPos - 80, height - 300);
-    gameUI.writeText('Thanks For Playing', centerPos - 122, height / 2);
+    gameUI.makeBox(0, 0, viewPort, height, 'rgba(0, 0, 0, 0.8)');
+    gameUI.writeText('Game Over', viewPort/2 - 80, height/2 - 50, 'white', 48);
+    gameUI.writeText('Thanks For Playing', viewPort/2 - 122, height/2, 'white', 32);
+    gameUI.writeText('Press RESTART to play again', viewPort/2 - 150, height/2 + 50, 'white', 24);
   };
 
   this.resetGame = function() {
+    that.clearAllTimeouts();
     that.clearInstances();
     that.init(originalMaps, currentLevel);
   };
@@ -914,6 +948,10 @@ function MarioGame() {
     goombas = [];
     bullets = [];
     powerUps = [];
+  };
+
+  this.clearAllTimeouts = function() {
+    clearTimeout(timeOutId);
   };
 
   this.clearTimeOut = function() {
