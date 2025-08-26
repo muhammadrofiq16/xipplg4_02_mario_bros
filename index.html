@@ -16,93 +16,175 @@
     
     <!-- TEMPATKAN PANEL KONTROL DI SINI -->
     <!-- Control Panel -->
-    <div class="control-panel">
-        <button class="control-btn" onclick="openSettings()">
-            <span class="btn-icon">⚙️</span>
-            SETTINGS
-        </button>
-        
-        <button class="control-btn" onclick="toggleFullScreen()">
-            <span class="btn-icon">📺</span>
-            FULL SCREEN
-        </button>
-        
-        <button class="control-btn" onclick="openCharacterSelect()">
-            <span class="btn-icon">👤</span>
-            CHARACTER
-        </button>
-        
-        <button class="control-btn" onclick="restartGame()">
-            <span class="btn-icon">🔄</span>
-            RESTART
-        </button>
-        
-        <button class="control-btn" onclick="openLeaderboard()">
-            <span class="btn-icon">🏆</span>
-            LEADERBOARD
-        </button>
-        
-
-    </div>
-
-    <!-- Modal Windows -->
-    <div id="settingsModal" class="modal">
-        <div class="modal-content">
-            <h2 class="modal-title">SETTINGS</h2>
-            <div class="setting-option">
-                <h3>Sound Volume</h3>
-                <input type="range" min="0" max="100" value="80">
-            </div>
-            <div class="setting-option">
-                <h3>Music Volume</h3>
-                <input type="range" min="0" max="100" value="70">
-            </div>
-            <div class="setting-option">
-                <h3>Controls</h3>
-                <select>
-                    <option>Keyboard</option>
-                    <option>Gamepad</option>
-                    <option>Touch</option>
-                </select>
-            </div>
-            <button class="modal-close" onclick="closeModal('settingsModal')">CLOSE</button>
-        </div>
-    </div>
-
-   <div id="characterModal" class="modal">
-    <div class="modal-content">
-        <h2 class="modal-title">SELECT CHARACTER</h2>
-        <div class="characters">
-            <div class="character" onclick="setCharacter('mario')">
-                <img src="assets/characters/mario.png" width="50">
-            </div>
-            <div class="character" onclick="setCharacter('luigi')">
-                <img src="Karakter/luigi.jpg" width="50">
-            </div>
-            <div class="character" onclick="setCharacter('peach')">
-                <img src="Karakter/peach.jpg" width="50">
-            </div>
-            <div class="character" onclick="setCharacter('toad')">
-                <img src="assets/characters/toad.png" width="50">
-            </div>
-        </div>
-        <button class="modal-close" onclick="closeModal('characterModal')">CONFIRM</button>
-    </div>
+    <!-- Control Panel -->
+<div class="control-panel">
+  <button class="control-btn" onclick="openSettings()">
+      <span class="btn-icon">⚙️</span>
+      SETTINGS
+  </button>
+  
+  <button class="control-btn" onclick="toggleFullScreen()">
+      <span class="btn-icon">📺</span>
+      FULL SCREEN
+  </button>
+  
+  <button class="control-btn" onclick="openCharacterSelect()">
+      <span class="btn-icon">👤</span>
+      CHARACTER
+  </button>
+  
+  <button class="control-btn" onclick="restartGame()">
+      <span class="btn-icon">🔄</span>
+      RESTART
+  </button>
+  
+  <button class="control-btn" onclick="openLeaderboard()">
+      <span class="btn-icon">🏆</span>
+      LEADERBOARD
+  </button>
+  
+  <button class="control-btn" id="pauseBtn" onclick="togglePause()">
+      <span class="btn-icon">⏸️</span>
+      PAUSE
+  </button>
 </div>
 
-    <div id="leaderboardModal" class="modal">
-        <div class="modal-content">
-            <h2 class="modal-title">LEADERBOARD</h2>
-            <ul class="leaderboard-list">
-                <li class="leaderboard-item"><span>1. MarioFan92</span><span>9,850</span></li>
-                <li class="leaderboard-item"><span>2. LuigiLover</span><span>8,720</span></li>
-                <li class="leaderboard-item"><span>3. PrincessP</span><span>7,650</span></li>
-                <li class="leaderboard-item"><span>4. SuperToad</span><span>6,980</span></li>
-                <li class="leaderboard-item"><span>5. YoshiRider</span><span>5,420</span></li>
-            </ul>
-            <button class="modal-close" onclick="closeModal('leaderboardModal')">CLOSE</button>
-        </div>
-    </div>
+<!-- Modal Windows -->
+<div id="settingsModal" class="modal">
+  <div class="modal-content">
+      <h2 class="modal-title">SETTINGS</h2>
+      
+      <div class="setting-option">
+          <h3>Sound Volume</h3>
+          <input type="range" min="0" max="100" value="80" class="volume-slider" id="soundVolume">
+          <span class="volume-value" id="soundValue">80%</span>
+      </div>
+      
+      <div class="setting-option">
+          <h3>Music Volume</h3>
+          <input type="range" min="0" max="100" value="70" class="volume-slider" id="musicVolume">
+          <span class="volume-value" id="musicValue">70%</span>
+      </div>
+      
+      <div class="setting-option">
+          <h3>Controls</h3>
+          <select id="controlType">
+              <option>Keyboard</option>
+              <option>Gamepad</option>
+              <option>Touch</option>
+          </select>
+      </div>
+      
+      <div class="setting-option">
+          <h3>Difficulty</h3>
+          <select id="difficulty">
+              <option value="easy">Easy</option>
+              <option value="normal" selected>Normal</option>
+              <option value="hard">Hard</option>
+          </select>
+      </div>
+      
+      <div class="setting-buttons">
+          <button class="modal-btn save-btn" onclick="saveSettings()">SAVE</button>
+          <button class="modal-btn cancel-btn" onclick="closeModal('settingsModal')">CANCEL</button>
+      </div>
+  </div>
+</div>
+
+<div id="characterModal" class="modal">
+  <div class="modal-content">
+      <h2 class="modal-title">SELECT CHARACTER</h2>
+      
+      <div class="characters-grid">
+          <div class="character-card selected" data-character="mario" onclick="selectCharacter(this, 'mario')">
+              <div class="character-icon">👨</div>
+              <div class="character-name">Mario</div>
+              <div class="character-desc">All-Around</div>
+          </div>
+          
+          <div class="character-card" data-character="luigi" onclick="selectCharacter(this, 'luigi')">
+              <div class="character-icon">👨‍🔧</div>
+              <div class="character-name">Luigi</div>
+              <div class="character-desc">Higher Jumps</div>
+          </div>
+          
+          <div class="character-card" data-character="peach" onclick="selectCharacter(this, 'peach')">
+              <div class="character-icon">👸</div>
+              <div class="character-name">Peach</div>
+              <div class="character-desc">Floating</div>
+          </div>
+          
+          <div class="character-card" data-character="toad" onclick="selectCharacter(this, 'toad')">
+              <div class="character-icon">🍄</div>
+              <div class="character-name">Toad</div>
+              <div class="character-desc">Faster Running</div>
+          </div>
+      </div>
+      
+      <div class="character-preview">
+          <div class="preview-title">SELECTED CHARACTER</div>
+          <div class="preview-content">
+              <div class="preview-icon" id="previewIcon">👨</div>
+              <div class="preview-name" id="previewName">Mario</div>
+              <div class="preview-ability" id="previewAbility">All-Around Abilities</div>
+          </div>
+      </div>
+      
+      <div class="modal-buttons">
+          <button class="modal-btn confirm-btn" onclick="confirmCharacter()">CONFIRM</button>
+          <button class="modal-btn cancel-btn" onclick="closeModal('characterModal')">CANCEL</button>
+      </div>
+  </div>
+</div>
+
+<div id="leaderboardModal" class="modal">
+  <div class="modal-content">
+      <h2 class="modal-title">LEADERBOARD</h2>
+      
+      <div class="leaderboard-tabs">
+          <button class="tab-btn active" onclick="changeLeaderboardTab('global')">GLOBAL</button>
+          <button class="tab-btn" onclick="changeLeaderboardTab('friends')">FRIENDS</button>
+          <button class="tab-btn" onclick="changeLeaderboardTab('weekly')">WEEKLY</button>
+      </div>
+      
+      <div class="leaderboard-content">
+          <div class="leaderboard-header">
+              <span>RANK</span>
+              <span>PLAYER</span>
+              <span>SCORE</span>
+              <span>LEVEL</span>
+          </div>
+          
+          <div class="leaderboard-list" id="leaderboardList">
+              <!-- Leaderboard items will be populated by JavaScript -->
+          </div>
+      </div>
+      
+      <div class="leaderboard-stats">
+          <div class="stat-item">
+              <span>Your Rank:</span>
+              <span id="userRank">#42</span>
+          </div>
+          <div class="stat-item">
+              <span>Your Score:</span>
+              <span id="userScore">5,420</span>
+          </div>
+      </div>
+      
+      <button class="modal-close" onclick="closeModal('leaderboardModal')">CLOSE</button>
+  </div>
+</div>
+
+<!-- Notification Toast -->
+<div id="toast" class="toast">
+  <span id="toastMessage"></span>
+</div>
+
+<!-- Pause Overlay -->
+<div id="pauseOverlay" class="pause-overlay">
+  <div class="pause-content">
+  </div>
+</div>
     <!-- END PANEL KONTROL -->
     
   </div>
