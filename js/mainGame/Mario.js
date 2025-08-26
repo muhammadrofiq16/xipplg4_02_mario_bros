@@ -6,7 +6,7 @@ function Mario() {
   this.y;
   this.width = 32;
   this.height = 44;
-  this.speed = 3;
+  this.speed = 100;
   this.velX = 0;
   this.velY = 0;
   this.jumping = false;
