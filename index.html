@@ -69,18 +69,26 @@
         </div>
     </div>
 
-    <div id="characterModal" class="modal">
-        <div class="modal-content">
-            <h2 class="modal-title">SELECT CHARACTER</h2>
-            <div class="characters">
-                <div class="character selected" onclick="selectCharacter(this)">👨</div>
-                <div class="character" onclick="selectCharacter(this)">👨‍🔧</div>
-                <div class="character" onclick="selectCharacter(this)">👸</div>
-                <div class="character" onclick="selectCharacter(this)">🍄</div>
+   <div id="characterModal" class="modal">
+    <div class="modal-content">
+        <h2 class="modal-title">SELECT CHARACTER</h2>
+        <div class="characters">
+            <div class="character" onclick="setCharacter('mario')">
+                <img src="assets/characters/mario.png" width="50">
             </div>
-            <button class="modal-close" onclick="closeModal('characterModal')">CONFIRM</button>
+            <div class="character" onclick="setCharacter('luigi')">
+                <img src="Karakter/luigi.jpg" width="50">
+            </div>
+            <div class="character" onclick="setCharacter('peach')">
+                <img src="Karakter/peach.jpg" width="50">
+            </div>
+            <div class="character" onclick="setCharacter('toad')">
+                <img src="assets/characters/toad.png" width="50">
+            </div>
         </div>
+        <button class="modal-close" onclick="closeModal('characterModal')">CONFIRM</button>
     </div>
+</div>
 
     <div id="leaderboardModal" class="modal">
         <div class="modal-content">
@@ -121,6 +129,8 @@
   <script src="js/MarioMaker.js"></script>
 
   <script src="js/Preloader.js"></script>
+
+  <script src="js/karakter.js"></script>
   
   <!-- Tambahkan script untuk kontrol panel -->
   <script src="js/mainGame/ControlPanel.js"></script>
