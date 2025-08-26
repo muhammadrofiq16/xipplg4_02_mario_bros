@@ -36,6 +36,9 @@ function MarioGame() {
   var instructionTick = 0; //showing instructions counter
   var that = this;
 
+  // TAMBAHKAN PROPERTI PAUSE DI SINI
+  this.isPaused = false;
+
   this.init = function(levelMaps, level) {
     height = 480;
     maxWidth = 0;
@@ -79,6 +82,34 @@ function MarioGame() {
     that.startGame();
   };
 
+  // TAMBAHKAN METODE PAUSE DAN RESUME DI SINI
+  this.pauseGame = function() {
+    if (!this.isPaused) {
+      window.cancelAnimationFrame(animationID);
+      this.isPaused = true;
+      
+      // Tampilkan overlay pause
+      gameUI.makeBox(0, 0, maxWidth, height);
+      gameUI.writeText('Permainan Dijeda', centerPos - 100, height / 2 - 20);
+      gameUI.writeText('Tekan tombol Jeda untuk melanjutkan', centerPos - 180, height / 2 + 20);
+    }
+  };
+
+  this.resumeGame = function() {
+    if (this.isPaused) {
+      this.isPaused = false;
+      animationID = window.requestAnimationFrame(that.startGame);
+    }
+  };
+
+  // TAMBAHKAN METODE RESTART LEVEL DI SINI
+  this.restartLevel = function() {
+    that.clearTimeOut();
+    that.clearInstances();
+    that.init(originalMaps, currentLevel);
+    this.isPaused = false;
+  };
+
   that.calculateMaxWidth = function() {
     //calculates the max width of the game according to map size
     for (var row = 0; row < map.length; row++) {
@@ -95,6 +126,11 @@ function MarioGame() {
 
     //key binding
     document.body.addEventListener('keydown', function(e) {
+      // TAMBAHKAN HANDLER UNTUK TOMBOL P (PAUSE)
+      if (e.keyCode === 80) { // 'P' key for pause
+        that.togglePause();
+      }
+      
       keys[e.keyCode] = true;
     });
 
@@ -172,8 +208,23 @@ function MarioGame() {
     });
   };
 
+  // TAMBAHKAN METHOD TOGGLE PAUSE
+  this.togglePause = function() {
+    if (this.isPaused) {
+      this.resumeGame();
+    } else {
+      this.pauseGame();
+    }
+  };
+
   //Main Game Loop
   this.startGame = function() {
+    // JIKA GAME SEDANG DI PAUSE, JANGAN JALANKAN GAME LOOP
+    if (that.isPaused) {
+      animationID = window.requestAnimationFrame(that.startGame);
+      return;
+    }
+    
     animationID = window.requestAnimationFrame(that.startGame);
 
     gameUI.clear(0, 0, maxWidth, height);
@@ -213,6 +264,8 @@ function MarioGame() {
   this.showInstructions = function() {
     gameUI.writeText('Controls: Arrow keys for direction, shift to run, ctrl for bullets', 30, 30);
     gameUI.writeText('Tip: Jumping while running makes you jump higher', 30, 60);
+    // TAMBAHKAN INSTRUKSI PAUSE
+    gameUI.writeText('Press P to pause the game', 30, 90);
   };
 
   this.renderMap = function() {
@@ -652,6 +705,11 @@ function MarioGame() {
 
   //controlling mario with key events
   this.updateMario = function() {
+    // JIKA GAME SEDANG DI PAUSE, JANGAN PERBARUI POSISI MARIO
+    if (that.isPaused) {
+      return;
+    }
+    
     var friction = 0.9;
     var gravity = 0.2;
 
@@ -828,6 +886,12 @@ function MarioGame() {
 
   this.pauseGame = function() {
     window.cancelAnimationFrame(animationID);
+    this.isPaused = true;
+    
+    // Tampilkan overlay pause
+    gameUI.makeBox(0, 0, maxWidth, height);
+    gameUI.writeText('Permainan Dijeda', centerPos - 100, height / 2 - 20);
+    gameUI.writeText('Tekan tombol Jeda untuk melanjutkan', centerPos - 180, height / 2 + 20);
   };
 
   this.gameOver = function() {
