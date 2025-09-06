@@ -4,12 +4,15 @@
 }
 
 .start-screen {
-  width: 1280px;
-  height: 480px;
+  width: 1300px;
+  height: 700px;
   margin: 0 auto;
   border: 1px solid black;
-  background: url('../images/start-screen.png');
+  background: url('../images/bg-start-screen.png') no-repeat center center;
   position: relative;
+  background-size: cover;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .editor-screen {
