@@ -71,15 +71,23 @@ function MarioGame() {
     score.displayScore();
     score.updateLevelNum(currentLevel);
 
-    if (!mario) {
-      //so that when level changes, it uses the same instance
-      mario = new Mario();
-      mario.init();
-    } else {
-      mario.x = 10;
-      mario.frame = 0;
-      mario.type = 'small'; // Reset ke small mario
-      mario.invulnerable = false;
+ if (!mario) {
+  //so that when level changes, it uses the same instance
+  mario = new Mario();
+  mario.init();
+} else {
+  mario.x = 10;
+  mario.frame = 0;
+  mario.type = 'small'; // Reset ke small mario
+  mario.invulnerable = false;
+}
+
+// 🔹 Tambahan untuk karakter terpilih
+if (currentCharacter && characterSprites[currentCharacter]) {
+  marioSprite = characterSprites[currentCharacter];
+}
+{
+
     }
     element = new Element();
     gameSound = new GameSound();
