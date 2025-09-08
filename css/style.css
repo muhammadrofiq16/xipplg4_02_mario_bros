@@ -3,17 +3,16 @@
   src: url('../fonts/SuperMario256.ttf');
 }
 
-.start-screen {
-  width: 1300px;
-  height: 700px;
-  margin: 0 auto;
-  border: 1px solid black;
-  background: url('../images/bg-start-screen.png') no-repeat center center;
-  position: relative;
-  background-size: cover;
-  overflow: hidden;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: url('../images/bg-start-screen.png') no-repeat center center fixed;
+    background-size: cover;
 }
+
+
 
 .editor-screen {
   width: 1280px;
@@ -258,6 +257,7 @@
   background: url('../images/bg.png');
 }
 
+
 .start-btn {
   width: 200px;
   height: 50px;
@@ -265,7 +265,7 @@
   background: url('../images/start-btn.png');
   position: absolute;
   bottom: 100px;
-  left: 252px;
+  left: 210px;
   border: 2px solid black;
 }
 
@@ -275,10 +275,11 @@
   background: url('../images/editor-btn.png');
   position: absolute;
   bottom: 100px;
-  left: 530px;
+  left: 310px;
   color: #ffffff;
   border: 2px solid black;
 }
+
 
 .created-btn {
   width: 200px;
@@ -286,9 +287,17 @@
   background: url('../images/saved-btn.png');
   position: absolute;
   bottom: 100px;
-  left: 810px;
+  left: 610px;
   color: #ffffff;
   border: 2px solid black;
+}
+
+.start-btn, .editor-btn, .created-btn {
+  position: fixed;
+  bottom: 80px;
+  width: 200px;
+  
+  /* ... properti lainnya tetap sama ... */
 }
 
 .back-btn {
