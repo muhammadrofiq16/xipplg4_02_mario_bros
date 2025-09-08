@@ -78,15 +78,18 @@ var MarioMaker = (function() {
     };
 
     this.startGame = function(levelMap) {
-      view.style(backToMenuBtn, { display: 'block' });
+    view.style(backToMenuBtn, { display: 'block' });
 
-      marioGame.clearInstances();
-      marioGame.init(levelMap, 1); //initiate level 1 of map
+    marioGame.clearInstances();
+    marioGame.init(levelMap, 1);
+    
+    // Simpan referensi game instance
+    this.currentGame = marioGame;
 
-      that.hideMainMenu();
-      editor.removeEditorScreen();
-      createdLevels.removeCreatedLevelsScreen();
-    };
+    that.hideMainMenu();
+    editor.removeEditorScreen();
+    createdLevels.removeCreatedLevelsScreen();
+};
 
     this.startEditor = function() {
       view.style(backToMenuBtn, { display: 'block' });

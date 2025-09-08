@@ -18,13 +18,23 @@ function Mario() {
 
   var that = this;
 
-  this.init = function() {
+this.init = function() {
     that.x = 10;
-    that.y = gameUI.getHeight() - 40 - 40;
+    that.y = 400; // Posisi Y yang lebih aman
+    that.type = 'small';
+    that.velX = 0;
+    that.velY = 0;
+    that.jumping = false;
+    that.grounded = false;
+    that.invulnerable = false;
+    that.frame = 0;
 
-    marioSprite = new Image();
-    marioSprite.src = 'images/mario-sprites.png';
-  };
+    // Pastikan sprite dimuat
+    if (typeof marioSprite === 'undefined') {
+        marioSprite = new Image();
+        marioSprite.src = 'images/mario-sprites.png';
+    }
+}
 
   this.draw = function() {
     that.sX = that.width * that.frame;

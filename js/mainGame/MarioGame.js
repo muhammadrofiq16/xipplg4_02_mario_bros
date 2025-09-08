@@ -75,6 +75,59 @@ function MarioGame() {
   //so that when level changes, it uses the same instance
   mario = new Mario();
   mario.init();
+  this.init = function(levelMaps, level) {
+    height = 480;
+    maxWidth = 0;
+    viewPort = 1280;
+    tileSize = 32;
+    translatedDist = 0;
+    goombas = [];
+    powerUps = [];
+    bullets = [];
+
+    // Reset status game
+    this.isPaused = false;
+    this.isDead = false;
+    this.isGameOver = false;
+
+    gameUI.setWidth(viewPort);
+    gameUI.setHeight(height);
+    gameUI.show();
+
+    currentLevel = level;
+    originalMaps = levelMaps;
+    map = JSON.parse(levelMaps[currentLevel]);
+
+    if (!score) {
+        score = new Score();
+        score.init();
+    }
+    score.displayScore();
+    score.updateLevelNum(currentLevel);
+
+    if (!mario) {
+        mario = new Mario();
+        mario.init();
+    } else {
+        mario.x = 10;
+        mario.y = height - 40 - 40; // Perbaikan: pastikan posisi Y benar
+        mario.frame = 0;
+        mario.type = 'small';
+        mario.invulnerable = false;
+        mario.velX = 0;
+        mario.velY = 0;
+        mario.jumping = false;
+        mario.grounded = false;
+    }
+
+    element = new Element();
+    gameSound = new GameSound();
+    gameSound.init();
+
+    that.calculateMaxWidth();
+    that.bindKeyPress();
+    that.startGame();
+};
 } else {
   mario.x = 10;
   mario.frame = 0;
