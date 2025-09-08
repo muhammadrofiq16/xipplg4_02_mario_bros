@@ -258,46 +258,44 @@ body {
 }
 
 
+.start-btn, .editor-btn, .created-btn {
+    position: fixed;
+    bottom: 80px;
+    width: 200px;
+    height: 50px;
+    color: #ffffff;
+    border: 2px solid black;
+    font-family: SuperMario256;
+    font-size: 18px;
+    text-align: center;
+    line-height: 50px;
+    cursor: pointer;
+    z-index: 10;
+    transition: all 0.3s;
+}
+
 .start-btn {
-  width: 200px;
-  height: 50px;
-  color: #ffffff;
-  background: url('../images/start-btn.png');
-  position: absolute;
-  bottom: 100px;
-  left: 210px;
-  border: 2px solid black;
+    background: url('../images/start-btn.png');
+    left: calc(50% - 320px); /* Posisi di sebelah kiri */
 }
 
 .editor-btn {
-  width: 200px;
-  height: 50px;
-  background: url('../images/editor-btn.png');
-  position: absolute;
-  bottom: 100px;
-  left: 310px;
-  color: #ffffff;
-  border: 2px solid black;
+    background: url('../images/editor-btn.png');
+    left: calc(50% - 100px); /* Posisi di tengah */
 }
-
 
 .created-btn {
-  width: 200px;
-  height: 50px;
-  background: url('../images/saved-btn.png');
-  position: absolute;
-  bottom: 100px;
-  left: 610px;
-  color: #ffffff;
-  border: 2px solid black;
+    background: url('../images/saved-btn.png');
+    left: calc(50% + 120px); /* Posisi di sebelah kanan */
 }
 
-.start-btn, .editor-btn, .created-btn {
-  position: fixed;
-  bottom: 80px;
-  width: 200px;
-  
-  /* ... properti lainnya tetap sama ... */
+.start-btn:hover, .editor-btn:hover, .created-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+.start-btn:active, .editor-btn:active, .created-btn:active {
+    transform: translateY(2px);
 }
 
 .back-btn {
@@ -909,4 +907,48 @@ select {
       padding: 12px;
       font-size: 16px;
   }
+}
+
+@media (max-width: 768px) {
+    .start-btn, .editor-btn, .created-btn {
+        width: 160px;
+        height: 45px;
+        line-height: 45px;
+        font-size: 16px;
+        bottom: 60px;
+    }
+    
+    .start-btn {
+        left: calc(50% - 250px);
+    }
+    
+    .editor-btn {
+        left: calc(50% - 80px);
+    }
+    
+    .created-btn {
+        left: calc(50% + 90px);
+    }
+}
+
+@media (max-width: 480px) {
+    .start-btn, .editor-btn, .created-btn {
+        width: 140px;
+        height: 40px;
+        line-height: 40px;
+        font-size: 14px;
+        bottom: 50px;
+    }
+    
+    .start-btn {
+        left: calc(50% - 220px);
+    }
+    
+    .editor-btn {
+        left: calc(50% - 70px);
+    }
+    
+    .created-btn {
+        left: calc(50% + 80px);
+    }
 }
